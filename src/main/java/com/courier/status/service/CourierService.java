@@ -1,7 +1,6 @@
 package com.courier.status.service;
 
 import com.cargo.sdk.Cargo;
-import com.courier.status.client.CargoServiceClient;
 import com.courier.status.dto.CourierDto;
 import com.courier.status.model.CourierEntity;
 import com.courier.status.repository.CourierRepository;

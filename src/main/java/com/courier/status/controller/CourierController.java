@@ -1,10 +1,7 @@
 package com.courier.status.controller;
 
 import com.cargo.sdk.Cargo;
-import com.courier.status.client.CargoServiceClient;
-import com.courier.status.dto.CargoDto;
 import com.courier.status.dto.CourierDto;
-import com.courier.status.dto.CourierWithCargoDto;
 import com.courier.status.model.CourierEntity;
 import com.courier.status.service.CourierService;
 import lombok.extern.slf4j.Slf4j;
@@ -20,11 +17,11 @@ public class CourierController {
 
 
     private final CourierService courierService;
-    private final CargoServiceClient cargoServiceClient;
 
-    public CourierController(CourierService courierService, CargoServiceClient cargoServiceClient) {
+
+    public CourierController(CourierService courierService) {
         this.courierService = courierService;
-        this.cargoServiceClient = cargoServiceClient;
+
     }
 
 
@@ -78,21 +75,4 @@ public class CourierController {
         return courierService.addCargo(courierId, cargo);
     }
 
-    @PostMapping("/byIds")
-    public ResponseEntity<List<CargoDto>> findByIds(@RequestBody List<Long> ids) {
-        log.info("Fetch cargo by id via courier service");
-        return cargoServiceClient.findByIds(ids);
-    }
-
-    @GetMapping("/{courierId}/cargos")
-    public CourierWithCargoDto getCourierWithCargos(@PathVariable Long courierId) throws Exception {
-        // Kurye bilgilerini getir
-        CourierDto courierDto = CourierDto.convert(courierService.getCourierById(courierId).getBody());
-
-        // Feign Client ile kargo bilgilerini al
-        List<CargoDto> cargos = cargoServiceClient.findByIds(courierDto.couriersCargosIds()).getBody();
-
-        // Kurye bilgileri ve kargo listesi ile dönen DTO oluştur
-        return new CourierWithCargoDto(courierDto, cargos);
-    }
 }
